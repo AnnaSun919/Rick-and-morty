@@ -1,0 +1,19 @@
+grid{
+display: flex;
+flex-wrap:  wrap;
+
+}
+
+img{
+  height: 30vh;
+  width: auto;
+}
+
+.item{
+ display: inline-block;
+ 
+}
+
+.item span{
+  display: inline-block;
+}
