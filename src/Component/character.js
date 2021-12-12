@@ -6,38 +6,77 @@ import "./chracter.css";
 function Character() {
   let [page, setPage] = useState(1);
   const [character, setCharacter] = useState(null);
+  let [serachItem, setSeachItem] = useState({
+    species: "",
+    status: "",
+    name: "",
+  });
 
   useEffect(() => {
     try {
       async function getcharacter() {
-        let response = await axios.get(
-          `${API_URL}/character/?page=${page}&status=alive`
-        );
-        // let response = await axios.get(`${API_URL}/character/?page=${page}`);
+        let response = await axios.get(`${API_URL}/character/?page=${page}`);
+        if (serachItem) {
+          let searchValue = Object.values(serachItem);
+
+          if (serachItem["status"] && serachItem["species"]) {
+            searchValue = serachItem["name"];
+            console.log(serachItem["status"]);
+            let searchValue1 = serachItem["status"];
+            response = await axios.get(
+              `${API_URL}/character/?page=${page}&status=${searchValue1}&species=${searchValue}`
+            );
+          } else if (serachItem["species"]) {
+            searchValue = serachItem["species"];
+            response = await axios.get(
+              `${API_URL}/character/?page=${page}&species=${searchValue}`
+            );
+          } else if (serachItem["status"]) {
+            searchValue = serachItem["status"];
+            response = await axios.get(
+              `${API_URL}/character/?page=${page}&status=${searchValue}`
+            );
+          }
+        }
+
         setCharacter(response.data.results);
-        console.log(response.data);
-        // setPageInfo(response.data.info);
-        // console.log(response.data.info);
       }
       getcharacter();
     } catch (err) {}
-  }, [page]);
+  }, [page, serachItem]);
 
   function changePage() {
     setPage((page += 1));
   }
 
   const handleSearch = (event) => {
-    console.log(event.target.value);
+    const { value, name } = event.target;
+    setSeachItem((state) => ({ ...state, [name]: value }));
   };
+
+  console.log(serachItem);
 
   return (
     <>
       <h1>Character</h1>
       Species
-      <input placeholder="Filter Species" onChange={handleSearch} />
+      <input
+        placeholder="Filter Species"
+        name="species"
+        onChange={(e) => handleSearch(e, "species")}
+      />
+      {/* Name
+      <input
+        placeholder="Filter Name"
+        name="name"
+        onChange={(e) => handleSearch(e, "name")}
+      /> */}
       Status
-      <input placeholder="Filter Status" />
+      <input
+        placeholder="Filter Status"
+        name="status"
+        onChange={(e) => handleSearch(e, "status")}
+      />
       <grid>
         {character &&
           character.map((element) => (
