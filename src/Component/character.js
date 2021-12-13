@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Dropdown, Button } from "react-bootstrap";
 import axios from "axios";
+
 import { API_URL } from "../config";
 import "./chracter.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import SingleCharater from "./singleCharater";
 
 function Character() {
   let [totalPage, setTotalPage] = useState(null);
   let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
-  let [n, setn] = useState(0);
+  const [showDetail, setShowDetail] = useState(false);
+
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState({
     species: "",
     status: "",
     name: "",
   });
+  const [pageNoArr, setPageNoArr] = useState([]);
 
   // const checkPage = () => {};
 
@@ -53,16 +58,22 @@ function Character() {
           //   );
           // }
         }
-        console.log(response.data);
-        setTotalPage(response.data.info.pages * 2);
+        console.log(response.data.info);
+        setTotalPage(response.data.info.pages);
         setCharacter(response.data.results);
       }
 
+      const pageNo = (totalPage) => {
+        const pageArr = [];
+        for (let i = 1; i <= totalPage; i++) {
+          pageArr.push(i);
+        }
+        setPageNoArr(pageArr);
+      };
+      pageNo(totalPage);
       getcharacter();
     } catch (err) {}
-  }, [page, serachItem, APIpage]);
-
-  console.log(character);
+  }, [page, serachItem, APIpage, totalPage]);
 
   function changePage(event, direction) {
     event.preventDefault();
@@ -83,21 +94,39 @@ function Character() {
     return true;
   }
 
+  const handlePageSelertor = (e, elem) => {
+    e.preventDefault();
+    console.log();
+    setAPIPage(elem);
+  };
+
   const handleSearch = (event) => {
     const { value, name } = event.target;
     setSeachItem((state) => ({ ...state, [name]: value }));
   };
 
-  const pageNo = (totalPage) => {
-    const pageArr = [];
-    for (let i = 0; i <= totalPage; i++) {
-      pageArr.push(i);
-    }
+  const hanldDetails = () => {
+    setShowDetail(!showDetail);
+    console.log(setShowDetail);
   };
 
+  console.log(character);
   return (
     <>
       <h1>Character</h1>
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          {APIpage} PAGE
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          {pageNoArr.map((elem) => (
+            <Dropdown.Item onClick={(e) => handlePageSelertor(e, elem)}>
+              {elem} PAGE
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown>
       Species
       <input
         placeholder="Filter Species"
@@ -118,10 +147,15 @@ function Character() {
       />
       <grid>
         {character &&
-          character.slice(n, n + 10).map((element, index) => (
+          character.slice(0, 10).map((element, index) => (
             <>
-              <div key={index} className="item">
-                <a href={element.url}>
+              <div
+                key={index}
+                className="item"
+                component={Link}
+                to={`/singleCharacter/${element.id}`}
+              >
+                <div href={`/singleCharater/${element.id}`}>
                   <img src={element.image} alt="img" />
                   <br />
                   <span>{element.name}</span>
@@ -129,31 +163,17 @@ function Character() {
                   <br />
                   <span>{element.status}</span>
                   <span>{element.created}</span>
-                </a>
+                  <Button onClick={hanldDetails}>Details</Button>
+                </div>
               </div>
             </>
           ))}
-        {/* {pageInfo && (
-          <>
-            <span>{pageInfo.count}</span>
-            <span>{pageInfo}</span>
-          </>
-        )} */}
+        {showDetail && <SingleCharater />}
       </grid>
       <Button onClick={(e) => changePage(e, "before")}>-</Button>
       <span>{page}</span>
       <Button onClick={(e) => changePage(e, "after")}>+</Button>
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {APIpage}
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu>
-          <Dropdown.Item href="#/action-1">{APIpage}</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
     </>
   );
 }
-
 export default Character;
