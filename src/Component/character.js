@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { Dropdown, Button } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "../config";
 import "./chracter.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Character() {
   let [totalPage, setTotalPage] = useState(null);
   let [page, setPage] = useState(1);
+  let [APIpage, setAPIPage] = useState(1);
+  let [n, setn] = useState(0);
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState({
     species: "",
@@ -18,7 +22,7 @@ function Character() {
   useEffect(() => {
     try {
       async function getcharacter() {
-        let response = await axios.get(`${API_URL}/character/?page=${page}`);
+        let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
         if (serachItem) {
           if (
             serachItem["status"] ||
@@ -29,7 +33,7 @@ function Character() {
             let searchValue1 = serachItem["status"];
             let searchValue2 = serachItem["name"];
             response = await axios.get(
-              `${API_URL}/character/?page=${page}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
+              `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
             );
           }
           // else if (serachItem["species"]) {
@@ -49,18 +53,34 @@ function Character() {
           //   );
           // }
         }
-        console.log(response.data.info.pages);
-        setTotalPage(response.data.info.pages);
-        setCharacter(response.data.results.slice(0, 10));
+        console.log(response.data);
+        setTotalPage(response.data.info.pages * 2);
+        setCharacter(response.data.results);
       }
+
       getcharacter();
     } catch (err) {}
-  }, [page, serachItem]);
+  }, [page, serachItem, APIpage]);
+
+  console.log(character);
 
   function changePage(event, direction) {
     event.preventDefault();
 
-    direction === "before" ? setPage((page -= 1)) : setPage((page += 1));
+    if (direction === "before" && page > 1) {
+      setPage((page -= 1));
+
+      if (page % 2 !== 0) {
+        setAPIPage((APIpage -= 1));
+      }
+    } else if (direction === "after" && totalPage > page) {
+      setPage((page += 1));
+
+      if (page % 2 !== 0) {
+        setAPIPage((APIpage += 1));
+      }
+    }
+    return true;
   }
 
   const handleSearch = (event) => {
@@ -68,7 +88,12 @@ function Character() {
     setSeachItem((state) => ({ ...state, [name]: value }));
   };
 
-  console.log(serachItem);
+  const pageNo = (totalPage) => {
+    const pageArr = [];
+    for (let i = 0; i <= totalPage; i++) {
+      pageArr.push(i);
+    }
+  };
 
   return (
     <>
@@ -93,9 +118,9 @@ function Character() {
       />
       <grid>
         {character &&
-          character.map((element) => (
+          character.slice(n, n + 10).map((element, index) => (
             <>
-              <div className="item">
+              <div key={index} className="item">
                 <a href={element.url}>
                   <img src={element.image} alt="img" />
                   <br />
@@ -115,9 +140,18 @@ function Character() {
           </>
         )} */}
       </grid>
-      <button onClick={(e) => changePage(e, "before")}>-</button>
+      <Button onClick={(e) => changePage(e, "before")}>-</Button>
       <span>{page}</span>
-      <button onClick={(e) => changePage(e, "after")}>+</button>
+      <Button onClick={(e) => changePage(e, "after")}>+</Button>
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          {APIpage}
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item href="#/action-1">{APIpage}</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
     </>
   );
 }
