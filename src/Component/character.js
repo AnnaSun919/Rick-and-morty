@@ -13,6 +13,7 @@ function Character() {
   let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
+  const [characterNo, setCharacterNo] = useState(null);
 
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState({
@@ -41,22 +42,6 @@ function Character() {
               `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
             );
           }
-          // else if (serachItem["species"]) {
-          //   searchValue = serachItem["species"];
-          //   response = await axios.get(
-          //     `${API_URL}/character/?page=${page}&species=${searchValue}`
-          //   );
-          // } else if (serachItem["status"]) {
-          //   searchValue = serachItem["status"];
-          //   response = await axios.get(
-          //     `${API_URL}/character/?page=${page}&status=${searchValue}`
-          //   );
-          // } else if (serachItem["name"]) {
-          //   searchValue = serachItem["name"];
-          //   response = await axios.get(
-          //     `${API_URL}/character/?page=${page}&name=${searchValue}`
-          //   );
-          // }
         }
         console.log(response.data.info);
         setTotalPage(response.data.info.pages);
@@ -105,9 +90,11 @@ function Character() {
     setSeachItem((state) => ({ ...state, [name]: value }));
   };
 
-  const hanldDetails = () => {
-    setShowDetail(!showDetail);
-    console.log(setShowDetail);
+  const hanldDetails = (e, number) => {
+    e.preventDefault();
+    setShowDetail(true);
+    setCharacterNo(number);
+    console.log(number);
   };
 
   console.log(character);
@@ -163,12 +150,23 @@ function Character() {
                   <br />
                   <span>{element.status}</span>
                   <span>{element.created}</span>
-                  <Button onClick={hanldDetails}>Details</Button>
+                  <Button
+                    onClick={(e) => {
+                      hanldDetails(e, element.id);
+                    }}
+                  >
+                    Details
+                  </Button>
                 </div>
               </div>
             </>
           ))}
-        {showDetail && <SingleCharater />}
+        {showDetail && (
+          <SingleCharater
+            characterNo={characterNo}
+            onHandleDetails={hanldDetails}
+          />
+        )}
       </grid>
       <Button onClick={(e) => changePage(e, "before")}>-</Button>
       <span>{page}</span>
