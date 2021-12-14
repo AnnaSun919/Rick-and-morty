@@ -5,6 +5,7 @@ import "./singleCharacter.css";
 function SingleCharater(props) {
   const { characterNo } = props;
   const [details, setDetails] = useState(null);
+  const [episode, setEpisode] = useState(null);
 
   useEffect(() => {
     try {
@@ -14,13 +15,21 @@ function SingleCharater(props) {
         );
         setDetails(response.data);
       }
+
+      async function getEpisode() {
+        let response = await axios.get(
+          `https://rickandmortyapi.com/api/episode`
+        );
+        setEpisode(response.data);
+      }
+      getEpisode();
       getcharacter(characterNo);
     } catch (err) {
       console.log(err);
     }
   }, [characterNo]);
 
-  console.log(details);
+  console.log(episode);
 
   return (
     <>

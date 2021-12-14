@@ -10,6 +10,8 @@ import SingleCharater from "./singleCharater";
 
 function Character() {
   let [totalPage, setTotalPage] = useState(null);
+  let [totalCharacter, setTotalCharacter] = useState(null);
+  let [dateData, setdateData] = useState(null);
   let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
@@ -43,7 +45,7 @@ function Character() {
             );
           }
         }
-        console.log(response.data.info);
+        setTotalCharacter(response.data.info.count);
         setTotalPage(response.data.info.pages);
         setCharacter(response.data.results);
       }
@@ -94,10 +96,39 @@ function Character() {
     e.preventDefault();
     setShowDetail(true);
     setCharacterNo(number);
-    console.log(number);
   };
 
-  console.log(character);
+  const handleDateSearch = (e) => {
+    e.preventDefault();
+    const start = e.target.startDate.value;
+    const end = e.target.endDate.value;
+    let dataArray = [];
+    let i = 1;
+    if (totalCharacter) {
+      try {
+        async function getDateCharacter() {
+          while (totalCharacter > i && dataArray.length <= 19) {
+            let responseDate = await axios.get(`${API_URL}/character/${i}`);
+            i++;
+            if (
+              start <= responseDate.data.created &&
+              responseDate.data.created <= end
+            ) {
+              dataArray.push(responseDate.data);
+            }
+          }
+          setdateData(dataArray);
+        }
+
+        getDateCharacter();
+      } catch (err) {
+        console.log("Date Err");
+      }
+    }
+  };
+
+  console.log(dateData);
+
   return (
     <>
       <h1>Character</h1>
@@ -132,6 +163,14 @@ function Character() {
         name="status"
         onChange={(e) => handleSearch(e, "status")}
       />
+      <form onSubmit={(e) => handleDateSearch(e)}>
+        <label>Date</label>
+
+        <input placeholder="Filter Status" name="startDate" type="date" />
+
+        <input placeholder="Filter Status" name="endDate" type="date" />
+        <button type="submit">Submit</button>
+      </form>
       <grid>
         {character &&
           character.slice(0, 10).map((element, index) => (
