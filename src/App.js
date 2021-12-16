@@ -1,4 +1,4 @@
-import "./App.css";
+import "./docs/App.css";
 import Character from "./Component/character";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SingleCharater from "./Component/singleCharater";
@@ -6,7 +6,6 @@ import SingleCharater from "./Component/singleCharater";
 function App() {
   return (
     <div className="App">
-      <div>Hello World!</div>
       <BrowserRouter>
         <div className="App">
           <Routes>

@@ -1,0 +1,29 @@
+form {
+  margin: 10px;
+}
+
+form input {
+  margin: 5px;
+}
+
+.character_container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  background-color: blue;
+  width: 80vw;
+  margin-left: 10vw;
+}
+
+.character_container .item {
+  padding: 10px;
+  margin: 2px;
+}
+
+.character_container .item img {
+  height: auto;
+  width: 10vw;
+}
+/*# sourceMappingURL=character.css.map */

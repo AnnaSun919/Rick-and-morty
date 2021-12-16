@@ -4,18 +4,17 @@ import { Dropdown, Button } from "react-bootstrap";
 import axios from "axios";
 import Backdrop from "./Backdrop/Backdrop";
 import { API_URL } from "../config";
-import "./chracter.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SingleCharater from "./singleCharater";
 
 function Character() {
   let [totalPage, setTotalPage] = useState(null);
   let [totalCharacter, setTotalCharacter] = useState(null);
-  let [page, setPage] = useState(1);
+  // let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
   const [characterNo, setCharacterNo] = useState(null);
-
+  const [tenItems, setTenItems] = useState(null);
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
@@ -40,12 +39,16 @@ function Character() {
               `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
             );
             if (serachItem["startDate"] && serachItem["endDate"]) {
+              console.log("date searchin");
               dataArray = response.data.results.filter((elem) => {
                 return (
                   serachItem["startDate"] <= elem.created &&
                   elem.created <= serachItem["endDate"]
                 );
               });
+              // if (dataArray.length === 0) {
+              //   setAPIPage((APIpage += 1));
+              // }
             }
           } else if (serachItem["startDate"] && serachItem["endDate"]) {
             let i = 1;
@@ -62,6 +65,7 @@ function Character() {
             }
           }
         }
+
         setCharacter(response.data.results);
         setTotalCharacter(response.data.info.count);
         setTotalPage(response.data.info.pages);
@@ -79,27 +83,29 @@ function Character() {
       };
       pageNo(totalPage);
       getcharacter();
-    } catch (err) {}
-  }, [page, serachItem, APIpage, totalPage, totalCharacter]);
-
-  function changePage(event, direction) {
-    event.preventDefault();
-
-    if (direction === "before" && page > 1) {
-      setPage((page -= 1));
-
-      if (page % 2 !== 0) {
-        setAPIPage((APIpage -= 1));
-      }
-    } else if (direction === "after" && totalPage > page) {
-      setPage((page += 1));
-
-      if (page % 2 !== 0) {
-        setAPIPage((APIpage += 1));
-      }
+    } catch (err) {
+      console.log("grap no info");
     }
-    return true;
-  }
+  }, [serachItem, APIpage, totalPage, totalCharacter]);
+
+  // function changePage(event, direction) {
+  //   event.preventDefault();
+
+  //   if (direction === "before" && page > 1) {
+  //     setPage((page -= 1));
+
+  //     if (page % 2 !== 0) {
+  //       setAPIPage((APIpage -= 1));
+  //     }
+  //   } else if (direction === "after" && totalPage > page) {
+  //     setPage((page += 1));
+
+  //     if (page % 2 !== 0) {
+  //       setAPIPage((APIpage += 1));
+  //     }
+  //   }
+  //   return true;
+  // }
 
   const handlePageSelertor = (e, elem) => {
     e.preventDefault();
@@ -122,7 +128,7 @@ function Character() {
   const hanldDetails = (e, number, show) => {
     e.preventDefault();
 
-    if (show == "close") {
+    if (show === "close") {
       setShowDetail(false);
     } else {
       setCharacterNo(number);
@@ -130,32 +136,11 @@ function Character() {
     }
   };
 
-  const handleDateSearch = (start, end) => {
-    let dataArray = [];
-    // dataArray = character.filter((elem) => {
-    //   return start <= elem.created && elem.created <= end;
-    // });
-    let i = 1;
-
-    try {
-      async function getDateCharacter() {
-        while (totalCharacter > i) {
-          let responseDate = await axios.get(`${API_URL}/character/${i}`);
-          i++;
-          if (
-            start <= responseDate.data.created &&
-            responseDate.data.created <= end
-          ) {
-            dataArray.push(responseDate.data);
-          }
-        }
-
-        setCharacter(dataArray);
-      }
-      getDateCharacter();
-    } catch (err) {
-      console.log("Date Err");
-    }
+  const pageHandler = () => {
+    //for items adjust to 10 ,, more than ten then put it to next page and dun render on the page and grap more info,,
+    // for items more than 10 ,, wait till next part //
+    // now no date filter will always = 20
+    // with date filter will grap all info
   };
 
   return (
@@ -199,14 +184,13 @@ function Character() {
         <input placeholder="Filter Name" name="name" />
         <label>Status</label>
         <input placeholder="Filter Status" name="status" />
-        <label>Date</label>
-
+        <label>Date : Created from </label>
         <input placeholder="Filter Status" name="startDate" type="date" />
-
+        to
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
       </form>
-      <div>
+      <div className="character_container">
         {character &&
           character.slice(0, 10).map((element, index) => (
             <>
@@ -220,10 +204,13 @@ function Character() {
                   <img src={element.image} alt="img" />
                   <br />
                   <span>{element.name}</span>
+                  <br />
                   <span>{element.species}</span>
                   <br />
                   <span>{element.status}</span>
-                  <span>{element.created}</span>
+                  <br />
+                  <span>{element.created.slice(0, 10)}</span>
+                  <br />
                   <Button
                     onClick={(e) => {
                       hanldDetails(e, element.id, "open");
@@ -243,9 +230,9 @@ function Character() {
           />
         )}
       </div>
-      <Button onClick={(e) => changePage(e, "before")}>-</Button>
+      {/* <Button onClick={(e) => changePage(e, "before")}>-</Button>
       <span>{page}</span>
-      <Button onClick={(e) => changePage(e, "after")}>+</Button>
+      <Button onClick={(e) => changePage(e, "after")}>+</Button> */}
     </>
   );
 }
