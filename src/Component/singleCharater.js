@@ -13,6 +13,7 @@ function SingleCharater(props) {
         let response = await axios.get(
           `https://rickandmortyapi.com/api/character/${character}`
         );
+        console.log(response.data);
         setDetails(response.data);
       }
 
@@ -29,14 +30,19 @@ function SingleCharater(props) {
     }
   }, [characterNo]);
 
-  console.log(episode);
-
   return (
     <>
       <div>
         {details && (
           <>
             <div className="container">
+              <button
+                onClick={(e) => {
+                  props.onHandleDetails(e, null, "close");
+                }}
+              >
+                XXX
+              </button>
               <h1>{details.name}</h1>
               <img src={details.image} alt="character" />
               <span>
@@ -48,8 +54,10 @@ function SingleCharater(props) {
                 Orign : {details.origin.name}
                 <br />
                 Episode :
-                {details.episode.map((ele) => (
-                  <div> EP{ele.replace(/[^0-9]/g, "")}</div>
+                {details.episode.map((ele, index) => (
+                  <div key={index}>
+                    Appeared Episode : EP{ele.replace(/[^0-9]/g, "")}
+                  </div>
                 ))}
               </span>
             </div>

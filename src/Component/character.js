@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Dropdown, Button } from "react-bootstrap";
 import axios from "axios";
-
+import Backdrop from "./Backdrop/Backdrop";
 import { API_URL } from "../config";
 import "./chracter.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -11,18 +11,13 @@ import SingleCharater from "./singleCharater";
 function Character() {
   let [totalPage, setTotalPage] = useState(null);
   let [totalCharacter, setTotalCharacter] = useState(null);
-  let [dateData, setdateData] = useState(null);
   let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
   const [characterNo, setCharacterNo] = useState(null);
 
   const [character, setCharacter] = useState(null);
-  let [serachItem, setSeachItem] = useState({
-    species: "",
-    status: "",
-    name: "",
-  });
+  let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
 
   // const checkPage = () => {};
@@ -30,6 +25,7 @@ function Character() {
   useEffect(() => {
     try {
       async function getcharacter() {
+        let dataArray = [];
         let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
         if (serachItem) {
           if (
@@ -43,11 +39,35 @@ function Character() {
             response = await axios.get(
               `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
             );
+            if (serachItem["startDate"] && serachItem["endDate"]) {
+              dataArray = response.data.results.filter((elem) => {
+                return (
+                  serachItem["startDate"] <= elem.created &&
+                  elem.created <= serachItem["endDate"]
+                );
+              });
+            }
+          } else if (serachItem["startDate"] && serachItem["endDate"]) {
+            let i = 1;
+
+            while (totalCharacter > i) {
+              let responseDate = await axios.get(`${API_URL}/character/${i}`);
+              i++;
+              if (
+                serachItem["startDate"] <= responseDate.data.created &&
+                responseDate.data.created <= serachItem["endDate"]
+              ) {
+                dataArray.push(responseDate.data);
+              }
+            }
           }
         }
+        setCharacter(response.data.results);
         setTotalCharacter(response.data.info.count);
         setTotalPage(response.data.info.pages);
-        setCharacter(response.data.results);
+        if (dataArray.length !== 0) {
+          setCharacter(dataArray);
+        }
       }
 
       const pageNo = (totalPage) => {
@@ -60,7 +80,7 @@ function Character() {
       pageNo(totalPage);
       getcharacter();
     } catch (err) {}
-  }, [page, serachItem, APIpage, totalPage]);
+  }, [page, serachItem, APIpage, totalPage, totalCharacter]);
 
   function changePage(event, direction) {
     event.preventDefault();
@@ -83,55 +103,64 @@ function Character() {
 
   const handlePageSelertor = (e, elem) => {
     e.preventDefault();
-    console.log();
     setAPIPage(elem);
   };
 
   const handleSearch = (event) => {
-    const { value, name } = event.target;
-    setSeachItem((state) => ({ ...state, [name]: value }));
+    event.preventDefault();
+    const { species, name, status, startDate, endDate } = event.target;
+
+    setSeachItem({
+      species: species.value,
+      name: name.value,
+      status: status.value,
+      startDate: startDate.value,
+      endDate: endDate.value,
+    });
   };
 
-  const hanldDetails = (e, number) => {
+  const hanldDetails = (e, number, show) => {
     e.preventDefault();
-    setShowDetail(true);
-    setCharacterNo(number);
-  };
 
-  const handleDateSearch = (e) => {
-    e.preventDefault();
-    const start = e.target.startDate.value;
-    const end = e.target.endDate.value;
-    let dataArray = [];
-    let i = 1;
-    if (totalCharacter) {
-      try {
-        async function getDateCharacter() {
-          while (totalCharacter > i && dataArray.length <= 19) {
-            let responseDate = await axios.get(`${API_URL}/character/${i}`);
-            i++;
-            if (
-              start <= responseDate.data.created &&
-              responseDate.data.created <= end
-            ) {
-              dataArray.push(responseDate.data);
-            }
-          }
-          setdateData(dataArray);
-        }
-
-        getDateCharacter();
-      } catch (err) {
-        console.log("Date Err");
-      }
+    if (show == "close") {
+      setShowDetail(false);
+    } else {
+      setCharacterNo(number);
+      setShowDetail(true);
     }
   };
 
-  console.log(dateData);
+  const handleDateSearch = (start, end) => {
+    let dataArray = [];
+    // dataArray = character.filter((elem) => {
+    //   return start <= elem.created && elem.created <= end;
+    // });
+    let i = 1;
+
+    try {
+      async function getDateCharacter() {
+        while (totalCharacter > i) {
+          let responseDate = await axios.get(`${API_URL}/character/${i}`);
+          i++;
+          if (
+            start <= responseDate.data.created &&
+            responseDate.data.created <= end
+          ) {
+            dataArray.push(responseDate.data);
+          }
+        }
+
+        setCharacter(dataArray);
+      }
+      getDateCharacter();
+    } catch (err) {
+      console.log("Date Err");
+    }
+  };
 
   return (
     <>
-      <h1>Character</h1>
+      <h1>Rick && Morty =)</h1>
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           {APIpage} PAGE
@@ -145,7 +174,7 @@ function Character() {
           ))}
         </Dropdown.Menu>
       </Dropdown>
-      Species
+      {/* Species
       <input
         placeholder="Filter Species"
         name="species"
@@ -162,8 +191,14 @@ function Character() {
         placeholder="Filter Status"
         name="status"
         onChange={(e) => handleSearch(e, "status")}
-      />
-      <form onSubmit={(e) => handleDateSearch(e)}>
+      /> */}
+      <form onSubmit={handleSearch}>
+        <label>Species</label>
+        <input placeholder="Filter Species" name="species" />
+        <label>Name</label>
+        <input placeholder="Filter Name" name="name" />
+        <label>Status</label>
+        <input placeholder="Filter Status" name="status" />
         <label>Date</label>
 
         <input placeholder="Filter Status" name="startDate" type="date" />
@@ -171,7 +206,7 @@ function Character() {
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
       </form>
-      <grid>
+      <div>
         {character &&
           character.slice(0, 10).map((element, index) => (
             <>
@@ -191,7 +226,7 @@ function Character() {
                   <span>{element.created}</span>
                   <Button
                     onClick={(e) => {
-                      hanldDetails(e, element.id);
+                      hanldDetails(e, element.id, "open");
                     }}
                   >
                     Details
@@ -200,13 +235,14 @@ function Character() {
               </div>
             </>
           ))}
+        {showDetail && <Backdrop />}
         {showDetail && (
           <SingleCharater
             characterNo={characterNo}
             onHandleDetails={hanldDetails}
           />
         )}
-      </grid>
+      </div>
       <Button onClick={(e) => changePage(e, "before")}>-</Button>
       <span>{page}</span>
       <Button onClick={(e) => changePage(e, "after")}>+</Button>
