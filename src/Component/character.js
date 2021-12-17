@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
+import Dropdownmenu from "./DropdownMenu/DropDown";
+import DropdownItem from "./DropdownMenu/DropdownItem";
 import axios from "axios";
 import Backdrop from "./Backdrop/Backdrop";
 import { API_URL } from "../config";
@@ -200,16 +202,24 @@ function Character() {
     }
     pageHelper(elem);
   };
-  console.log(date);
+
   return (
     <>
       <h1>Rick && Morty =)</h1>
+      <DropdownItem>
+        <Dropdownmenu />
+      </DropdownItem>
+
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           {showPage} PAGE
         </Dropdown.Toggle>
 
-        <Dropdown.Menu>
+        <Dropdown.Menu
+          style={
+            ({ overflowY: "auto" }, { overflowX: "hidden" }, { height: "60vh" })
+          }
+        >
           {pageNoArr.map((elem, index) => (
             <Dropdown.Item key={index} onClick={(e) => forShowItem(e, elem)}>
               {elem} PAGE
@@ -225,6 +235,7 @@ function Character() {
         <input placeholder="Filter Name" name="name" />
         <label>Status</label>
         <input placeholder="Filter Status" name="status" />
+        <br />
         <label>Created Date: From </label>
         <input placeholder="Filter Status" name="startDate" type="date" />
         to
