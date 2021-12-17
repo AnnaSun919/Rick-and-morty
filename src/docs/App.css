@@ -1,8 +1,9 @@
 form {
   margin: 5px;
   background-color: #4aa4f8;
-  border-radius: 10%;
-  width: 80vw;
+  border-radius: 10px;
+  width: 95vw;
+  margin: 2vh 2.5vw;
 }
 
 form input {
@@ -10,23 +11,30 @@ form input {
 }
 
 .character_container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  width: 80vw;
-  margin-left: 10vw;
+  display: -ms-grid;
+  display: grid;
+  width: 90vw;
+  margin-left: 5vw;
+  -ms-grid-columns: (1fr)[5];
+      grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1rem;
 }
 
 .character_container .item {
   padding: 10px;
-  margin: 2px;
+  background-color: #4aa4f8;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 3%;
+}
+
+.character_container .item:hover {
+  background-color: #7bbdfa;
 }
 
 .character_container .item img {
   height: auto;
-  width: 10vw;
+  width: 100%;
 }
 
 .App {

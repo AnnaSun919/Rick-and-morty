@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Dropdown, Button } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 import axios from "axios";
 import Backdrop from "./Backdrop/Backdrop";
 import { API_URL } from "../config";
@@ -8,24 +7,41 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SingleCharater from "./singleCharater";
 
 function Character() {
+  //what unfiinsh: 10 items a page
+  //jest
+  //dataArray empty does show error
+  //find no itme no error
+  //too many useState
+  //page arr can it be easier ??
+  //for the episode info loop through or not ,
+  // responsive =)
+  let [basic, setBasic] = useState({
+    totalPage: "",
+    totalCharacter: "",
+    APIpage: "",
+    character: "",
+  });
+  let [n, setn] = useState(0);
+  const [showItem, setShowItem] = useState(null);
   let [totalPage, setTotalPage] = useState(null);
   let [totalCharacter, setTotalCharacter] = useState(null);
-  // let [page, setPage] = useState(1);
   let [APIpage, setAPIPage] = useState(1);
+  let [showPage, setShowPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
   const [characterNo, setCharacterNo] = useState(null);
-  const [tenItems, setTenItems] = useState(null);
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
 
-  // const checkPage = () => {};
+  const [first, setFirst] = useState(true);
 
   useEffect(() => {
     try {
       async function getcharacter() {
         let dataArray = [];
+        console.log(APIpage);
         let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
+
         if (serachItem) {
           if (
             serachItem["status"] ||
@@ -65,6 +81,9 @@ function Character() {
             }
           }
         }
+        if (first) {
+          setShowItem(response.data.results.slice(0, 10));
+        }
 
         setCharacter(response.data.results);
         setTotalCharacter(response.data.info.count);
@@ -76,46 +95,29 @@ function Character() {
 
       const pageNo = (totalPage) => {
         const pageArr = [];
-        for (let i = 1; i <= totalPage; i++) {
+        for (let i = 1; i <= totalPage * 2; i++) {
           pageArr.push(i);
         }
         setPageNoArr(pageArr);
       };
       pageNo(totalPage);
       getcharacter();
+
+      console.log();
     } catch (err) {
-      console.log("grap no info");
+      console.log(err);
     }
-  }, [serachItem, APIpage, totalPage, totalCharacter]);
+  }, [serachItem, APIpage, totalPage, totalCharacter, first]);
 
-  // function changePage(event, direction) {
-  //   event.preventDefault();
-
-  //   if (direction === "before" && page > 1) {
-  //     setPage((page -= 1));
-
-  //     if (page % 2 !== 0) {
-  //       setAPIPage((APIpage -= 1));
-  //     }
-  //   } else if (direction === "after" && totalPage > page) {
-  //     setPage((page += 1));
-
-  //     if (page % 2 !== 0) {
-  //       setAPIPage((APIpage += 1));
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  const handlePageSelertor = (e, elem) => {
-    e.preventDefault();
-    setAPIPage(elem);
-  };
+  // const handlePageSelertor = (e, elem) => {
+  //   e.preventDefault();
+  //   setAPIPage(elem);
+  // };
 
   const handleSearch = (event) => {
     event.preventDefault();
     const { species, name, status, startDate, endDate } = event.target;
-
+    setAPIPage(1);
     setSeachItem({
       species: species.value,
       name: name.value,
@@ -136,24 +138,41 @@ function Character() {
     }
   };
 
-  const pageHandler = () => {
-    //for items adjust to 10 ,, more than ten then put it to next page and dun render on the page and grap more info,,
-    // for items more than 10 ,, wait till next part //
-    // now no date filter will always = 20
-    // with date filter will grap all info
+  const forShowItem = (e, elem) => {
+    setFirst(false);
+    e.preventDefault();
+    setShowPage(elem);
+
+    if (elem % 2 === 0) {
+      setAPIPage(elem - 1);
+    } else if (elem === 1) {
+    } else {
+    }
+
+    // situation 1 = created date only
+    //dataArray(slice n + n+10), total page = items /10 , move page = move n
+
+    // situation 2 = created date plus other
+    // need to loop throught API pages , and get dataArray , dataArray(slice n + n+10), total page = items /10 , move page = move n
+    // situation 3 = only others
+    // 20 items a page , page move page = move n when
   };
+
+  console.log(character);
+
+  console.log(showItem);
 
   return (
     <>
       <h1>Rick && Morty =)</h1>
       <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {APIpage} PAGE
+          {showPage} PAGE
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
           {pageNoArr.map((elem) => (
-            <Dropdown.Item onClick={(e) => handlePageSelertor(e, elem)}>
+            <Dropdown.Item onClick={(e) => forShowItem(e, elem)}>
               {elem} PAGE
             </Dropdown.Item>
           ))}
@@ -184,55 +203,45 @@ function Character() {
         <input placeholder="Filter Name" name="name" />
         <label>Status</label>
         <input placeholder="Filter Status" name="status" />
-        <label>Date : Created from </label>
+        <label>Created Date: From </label>
         <input placeholder="Filter Status" name="startDate" type="date" />
         to
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
       </form>
       <div className="character_container">
-        {character &&
-          character.slice(0, 10).map((element, index) => (
+        {showItem &&
+          showItem.map((element, index) => (
             <>
               <div
                 key={index}
                 className="item"
-                component={Link}
-                to={`/singleCharacter/${element.id}`}
+                onClick={(e) => {
+                  hanldDetails(e, element.id, "open");
+                }}
               >
-                <div href={`/singleCharater/${element.id}`}>
-                  <img src={element.image} alt="img" />
-                  <br />
-                  <span>{element.name}</span>
-                  <br />
-                  <span>{element.species}</span>
-                  <br />
-                  <span>{element.status}</span>
-                  <br />
-                  <span>{element.created.slice(0, 10)}</span>
-                  <br />
-                  <Button
-                    onClick={(e) => {
-                      hanldDetails(e, element.id, "open");
-                    }}
-                  >
-                    Details
-                  </Button>
-                </div>
+                <img src={element.image} alt="img" />
+                <br />
+                <span>{element.name}</span>
+                <br />
+                <span>{element.species}</span>
+                <br />
+                <span>{element.status}</span>
+                <br />
+                <span>{element.created.slice(0, 10)}</span>
+                <br />
               </div>
             </>
           ))}
-        {showDetail && <Backdrop />}
-        {showDetail && (
-          <SingleCharater
-            characterNo={characterNo}
-            onHandleDetails={hanldDetails}
-          />
-        )}
       </div>
-      {/* <Button onClick={(e) => changePage(e, "before")}>-</Button>
-      <span>{page}</span>
-      <Button onClick={(e) => changePage(e, "after")}>+</Button> */}
+      {showDetail && <Backdrop />}
+      {showDetail && (
+        <SingleCharater
+          characterNo={characterNo}
+          onHandleDetails={hanldDetails}
+        />
+      )}
+      <button onClick={(e) => forShowItem(e)}>-</button>
     </>
   );
 }

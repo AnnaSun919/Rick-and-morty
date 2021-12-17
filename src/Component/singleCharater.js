@@ -5,7 +5,7 @@ import "./singleCharacter.css";
 function SingleCharater(props) {
   const { characterNo } = props;
   const [details, setDetails] = useState(null);
-  // const [episode, setEpisode] = useState(null);
+  const [no, setNo] = useState(null);
 
   useEffect(() => {
     try {
@@ -17,18 +17,30 @@ function SingleCharater(props) {
         setDetails(response.data);
       }
 
-      // async function getEpisode() {
-      //   let response = await axios.get(
-      //     `https://rickandmortyapi.com/api/episode`
-      //   );
-      //   setEpisode(response.data);
-      // }
-      // getEpisode();
       getcharacter(characterNo);
     } catch (err) {
-      console.log(err);
+      console.log(err.request);
+      return err.request;
     }
-  }, [characterNo]);
+  }, [characterNo, no]);
+
+  const handleNo = (e) => {
+    e.preventDefault();
+    console.log(e.target.value);
+    setNo(e.target.value);
+  };
+
+  const getEpisode = (e) => {
+    e.preventDefault();
+    axios
+      .get(`https://rickandmortyapi.com/api/episode/${e.target.value}`)
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err.request.response);
+      });
+  };
 
   return (
     <>
@@ -43,6 +55,13 @@ function SingleCharater(props) {
               >
                 XXX
               </button>
+
+              <input
+                name="episode"
+                onChange={(e) => {
+                  getEpisode(e);
+                }}
+              />
               <h1>{details.name}</h1>
               <img src={details.image} alt="character" />
               <span>

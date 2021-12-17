@@ -1,0 +1,39 @@
+form{
+  margin: 5px;
+  background-color: $secondary-color;
+  border-radius: 10px;
+  width: 95vw;
+  margin:2vh 2.5vw;
+  
+
+  input{
+    margin: 5px;
+  }
+}
+
+
+.character_container{
+  display: grid;
+  width: 90vw;
+  margin-left:5vw;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 1rem;
+
+
+  .item{
+    padding: 10px;
+    background-color: $secondary-color;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 3%;
+
+&:hover {
+  background-color: lighten($secondary-color, 10%);
+}
+
+img{
+  height: auto;
+  width: 100%;
+}
+}
+}
