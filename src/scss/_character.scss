@@ -14,9 +14,11 @@ form{
 
 .character_container{
   display: grid;
-  width: 90vw;
-  margin-left:5vw;
+  width: 80vw;
+  height: 70vh;
+  margin-left:10vw;
   grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   grid-gap: 1rem;
 
 
@@ -33,7 +35,7 @@ form{
 
 img{
   height: auto;
-  width: 100%;
+  width: 80%;
 }
 }
 }

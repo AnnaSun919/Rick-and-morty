@@ -7,9 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SingleCharater from "./singleCharater";
 
 function Character() {
-  //what unfiinsh: 10 items a page
   //jest
-  //dataArray empty does show error
   //find no itme no error
   //too many useState
   //page arr can it be easier ??
@@ -32,7 +30,7 @@ function Character() {
   const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
-
+  const [date, setDate] = useState(false);
   const [first, setFirst] = useState(true);
 
   useEffect(() => {
@@ -54,16 +52,30 @@ function Character() {
             response = await axios.get(
               `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
             );
-            if (serachItem["startDate"] && serachItem["endDate"]) {
-              console.log("date searchin");
-              dataArray = response.data.results.filter((elem) => {
-                return (
-                  serachItem["startDate"] <= elem.created &&
-                  elem.created <= serachItem["endDate"]
+            if (date) {
+              let test = [];
+
+              let page = 1;
+              let totalPage = response.data.info.pages;
+              while (page <= totalPage) {
+                response = await axios.get(
+                  `${API_URL}/character/?page=${page}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
                 );
-              });
+                page++;
+
+                test.push(
+                  response.data.results.filter((elem) => {
+                    return (
+                      serachItem["startDate"] <= elem.created &&
+                      elem.created <= serachItem["endDate"]
+                    );
+                  })
+                );
+              }
+
+              dataArray = test.flat();
             }
-          } else if (serachItem["startDate"] && serachItem["endDate"]) {
+          } else if (date) {
             let i = 1;
 
             while (totalCharacter > i) {
@@ -89,6 +101,7 @@ function Character() {
         if (dataArray.length !== 0) {
           setShowItem(dataArray.slice(0, 10));
           setCharacter(dataArray);
+          pageNo(dataArray.length);
         }
       }
 
@@ -109,16 +122,15 @@ function Character() {
     } catch (err) {
       console.log(err);
     }
-  }, [serachItem, APIpage, totalPage, totalCharacter, first]);
-
-  // const handlePageSelertor = (e, elem) => {
-  //   e.preventDefault();
-  //   setAPIPage(elem);
-  // };
+  }, [serachItem, APIpage, totalPage, totalCharacter, first, date]);
 
   const handleSearch = (event) => {
     event.preventDefault();
+
     const { species, name, status, startDate, endDate } = event.target;
+    if ((startDate.value, endDate.value)) {
+      setDate(true);
+    }
     setAPIPage(1);
     setShowPage(1);
     setSeachItem({
@@ -142,34 +154,31 @@ function Character() {
   };
 
   const pageHelper = (elem) => {
-    if (elem % 2 === 0) {
-      setTimeout(() => {
-        setCharacter((currentState) => {
-          setShowItem(currentState.slice(10, 20));
-          return currentState;
-        });
-      }, 1000);
+    if (date) {
+      setShowItem(character.slice(elem * 10 - 10, elem * 10));
     } else {
-      setShowItem(character.slice(0, 10));
+      if (elem % 2 === 0) {
+        setTimeout(() => {
+          setCharacter((currentState) => {
+            setShowItem(currentState.slice(10, 20));
+            return currentState;
+          });
+        }, 1000);
+      } else {
+        setShowItem(character.slice(0, 10));
+      }
     }
   };
 
   const forShowItem = (e, elem) => {
-    console.log();
     e.preventDefault();
     setShowPage(elem);
-
-    elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
+    if (!date) {
+      elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
+    }
     pageHelper(elem);
-    // situation 1 = created date only
-    //dataArray(slice n + n+10), total page = items /10 , move page = move n
-    // situation 2 = created date plus other
-    // need to loop throught API pages , and get dataArray , dataArray(slice n + n+10), total page = items /10 , move page = move n
-    // situation 3 = only others
-    // 20 items a page , page move page = move n when// finish!!
   };
 
-  console.log(character);
   return (
     <>
       <h1>Rick && Morty =)</h1>
@@ -186,24 +195,7 @@ function Character() {
           ))}
         </Dropdown.Menu>
       </Dropdown>
-      {/* Species
-      <input
-        placeholder="Filter Species"
-        name="species"
-        onChange={(e) => handleSearch(e, "species")}
-      />
-      Name
-      <input
-        placeholder="Filter Name"
-        name="name"
-        onChange={(e) => handleSearch(e, "name")}
-      />
-      Status
-      <input
-        placeholder="Filter Status"
-        name="status"
-        onChange={(e) => handleSearch(e, "status")}
-      /> */}
+
       <form onSubmit={handleSearch}>
         <label>Species</label>
         <input placeholder="Filter Species" name="species" />
@@ -249,7 +241,6 @@ function Character() {
           onHandleDetails={hanldDetails}
         />
       )}
-      <button onClick={(e) => forShowItem(e)}>-</button>
     </>
   );
 }
