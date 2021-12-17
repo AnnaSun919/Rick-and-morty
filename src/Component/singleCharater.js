@@ -5,7 +5,7 @@ import "./singleCharacter.css";
 function SingleCharater(props) {
   const { characterNo } = props;
   const [details, setDetails] = useState(null);
-  const [no, setNo] = useState(null);
+  // const [no, setNo] = useState(null);
 
   useEffect(() => {
     try {
@@ -22,13 +22,13 @@ function SingleCharater(props) {
       console.log(err.request);
       return err.request;
     }
-  }, [characterNo, no]);
+  }, [characterNo]);
 
-  const handleNo = (e) => {
-    e.preventDefault();
-    console.log(e.target.value);
-    setNo(e.target.value);
-  };
+  // const handleNo = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.target.value);
+  //   setNo(e.target.value);
+  // };
 
   const getEpisode = (e) => {
     e.preventDefault();

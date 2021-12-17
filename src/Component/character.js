@@ -16,22 +16,20 @@ function Character() {
   let [basic, setBasic] = useState({
     totalPage: "",
     totalCharacter: "",
-    APIpage: "",
     character: "",
   });
 
   const [showItem, setShowItem] = useState(null);
-  let [totalPage, setTotalPage] = useState(null);
-  let [totalCharacter, setTotalCharacter] = useState(null);
   let [APIpage, setAPIPage] = useState(1);
   let [showPage, setShowPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
   const [characterNo, setCharacterNo] = useState(null);
-  const [character, setCharacter] = useState(null);
   let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
   const [date, setDate] = useState(false);
+  const [searchOther, setSearchOther] = useState(false);
   const [first, setFirst] = useState(true);
+  const [findNothing, setfindNothing] = useState(null);
 
   useEffect(() => {
     try {
@@ -41,11 +39,7 @@ function Character() {
         let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
 
         if (serachItem) {
-          if (
-            serachItem["status"] ||
-            serachItem["species"] ||
-            serachItem["name"]
-          ) {
+          if (searchOther) {
             let searchValue = serachItem["species"];
             let searchValue1 = serachItem["status"];
             let searchValue2 = serachItem["name"];
@@ -54,7 +48,6 @@ function Character() {
             );
             if (date) {
               let test = [];
-
               let page = 1;
               let totalPage = response.data.info.pages;
               while (page <= totalPage) {
@@ -76,31 +69,53 @@ function Character() {
               dataArray = test.flat();
             }
           } else if (date) {
+            let response = await axios.get(
+              `${API_URL}/character/?page=${APIpage}`
+            );
+            let totalPage = response.data.info.pages;
             let i = 1;
+            let test = [];
+            console.log(totalPage);
+            while (totalPage >= i) {
+              console.log("hello");
 
-            while (totalCharacter > i) {
-              let responseDate = await axios.get(`${API_URL}/character/${i}`);
+              let responseData = await axios.get(
+                `${API_URL}/character/?page=${i}`
+              );
               i++;
-              if (
-                serachItem["startDate"] <= responseDate.data.created &&
-                responseDate.data.created <= serachItem["endDate"]
-              ) {
-                dataArray.push(responseDate.data);
-              }
+
+              test.push(
+                responseData.data.results.filter((elem) => {
+                  return (
+                    serachItem["startDate"] <= elem.created &&
+                    elem.created <= serachItem["endDate"]
+                  );
+                })
+              );
             }
+            dataArray = test.flat();
           }
         }
-        if (first) {
-          setShowItem(response.data.results.slice(0, 10));
-        }
 
-        setCharacter(response.data.results);
-        setTotalCharacter(response.data.info.count);
-        setTotalPage(response.data.info.pages);
+        setShowItem(response.data.results.slice(0, 10));
+        pageNo(response.data.info.count);
+        setBasic({
+          totalCharacter: response.data.info.count,
+          character: response.data.results,
+          totalPage: response.data.info.pages,
+        });
 
-        if (dataArray.length !== 0) {
+        if (date) {
+          console.log("test" + dataArray);
+          if (dataArray.length === 0) {
+            setfindNothing("Find no informaion");
+          }
           setShowItem(dataArray.slice(0, 10));
-          setCharacter(dataArray);
+          setBasic({
+            totalCharacter: dataArray.length,
+            character: dataArray,
+          });
+
           pageNo(dataArray.length);
         }
       }
@@ -117,12 +132,12 @@ function Character() {
         }
         setPageNoArr(pageArr);
       };
-      pageNo(totalCharacter);
+
       getcharacter();
     } catch (err) {
       console.log(err);
     }
-  }, [serachItem, APIpage, totalPage, totalCharacter, first, date]);
+  }, [serachItem, APIpage, first, date, searchOther]);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -130,6 +145,9 @@ function Character() {
     const { species, name, status, startDate, endDate } = event.target;
     if ((startDate.value, endDate.value)) {
       setDate(true);
+    }
+    if (species.value || species.value || name.value) {
+      setSearchOther(true);
     }
     setAPIPage(1);
     setShowPage(1);
@@ -155,17 +173,17 @@ function Character() {
 
   const pageHelper = (elem) => {
     if (date) {
-      setShowItem(character.slice(elem * 10 - 10, elem * 10));
+      setShowItem(basic.character.slice(elem * 10 - 10, elem * 10));
     } else {
       if (elem % 2 === 0) {
         setTimeout(() => {
-          setCharacter((currentState) => {
-            setShowItem(currentState.slice(10, 20));
+          setBasic((currentState) => {
+            setShowItem(currentState.character.slice(10, 20));
             return currentState;
           });
         }, 1000);
       } else {
-        setShowItem(character.slice(0, 10));
+        setShowItem(basic.character.slice(0, 10));
       }
     }
   };
@@ -179,6 +197,8 @@ function Character() {
     pageHelper(elem);
   };
 
+  console.log(basic.totalCharacter);
+
   return (
     <>
       <h1>Rick && Morty =)</h1>
@@ -188,8 +208,8 @@ function Character() {
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          {pageNoArr.map((elem) => (
-            <Dropdown.Item onClick={(e) => forShowItem(e, elem)}>
+          {pageNoArr.map((elem, index) => (
+            <Dropdown.Item key={index} onClick={(e) => forShowItem(e, elem)}>
               {elem} PAGE
             </Dropdown.Item>
           ))}
@@ -209,6 +229,8 @@ function Character() {
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
       </form>
+
+      <span>{findNothing && <span>{findNothing}</span>}</span>
       <div className="character_container">
         {showItem &&
           showItem.map((element, index) => (
