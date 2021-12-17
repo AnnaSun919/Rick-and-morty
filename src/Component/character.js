@@ -21,7 +21,7 @@ function Character() {
     APIpage: "",
     character: "",
   });
-  let [n, setn] = useState(0);
+
   const [showItem, setShowItem] = useState(null);
   let [totalPage, setTotalPage] = useState(null);
   let [totalCharacter, setTotalCharacter] = useState(null);
@@ -39,7 +39,7 @@ function Character() {
     try {
       async function getcharacter() {
         let dataArray = [];
-        console.log(APIpage);
+
         let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
 
         if (serachItem) {
@@ -62,9 +62,6 @@ function Character() {
                   elem.created <= serachItem["endDate"]
                 );
               });
-              // if (dataArray.length === 0) {
-              //   setAPIPage((APIpage += 1));
-              // }
             }
           } else if (serachItem["startDate"] && serachItem["endDate"]) {
             let i = 1;
@@ -88,22 +85,27 @@ function Character() {
         setCharacter(response.data.results);
         setTotalCharacter(response.data.info.count);
         setTotalPage(response.data.info.pages);
+
         if (dataArray.length !== 0) {
+          setShowItem(dataArray.slice(0, 10));
           setCharacter(dataArray);
         }
       }
 
-      const pageNo = (totalPage) => {
+      const pageNo = (totalCharacter) => {
+        let totalPage = 0;
+        totalCharacter % 10 === 0
+          ? (totalPage = totalCharacter / 10)
+          : (totalPage = totalCharacter / 10 + 1);
+
         const pageArr = [];
-        for (let i = 1; i <= totalPage * 2; i++) {
+        for (let i = 1; i <= totalPage; i++) {
           pageArr.push(i);
         }
         setPageNoArr(pageArr);
       };
-      pageNo(totalPage);
+      pageNo(totalCharacter);
       getcharacter();
-
-      console.log();
     } catch (err) {
       console.log(err);
     }
@@ -118,6 +120,7 @@ function Character() {
     event.preventDefault();
     const { species, name, status, startDate, endDate } = event.target;
     setAPIPage(1);
+    setShowPage(1);
     setSeachItem({
       species: species.value,
       name: name.value,
@@ -138,30 +141,35 @@ function Character() {
     }
   };
 
+  const pageHelper = (elem) => {
+    if (elem % 2 === 0) {
+      setTimeout(() => {
+        setCharacter((currentState) => {
+          setShowItem(currentState.slice(10, 20));
+          return currentState;
+        });
+      }, 1000);
+    } else {
+      setShowItem(character.slice(0, 10));
+    }
+  };
+
   const forShowItem = (e, elem) => {
-    setFirst(false);
+    console.log();
     e.preventDefault();
     setShowPage(elem);
 
-    if (elem % 2 === 0) {
-      setAPIPage(elem - 1);
-    } else if (elem === 1) {
-    } else {
-    }
-
+    elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
+    pageHelper(elem);
     // situation 1 = created date only
     //dataArray(slice n + n+10), total page = items /10 , move page = move n
-
     // situation 2 = created date plus other
     // need to loop throught API pages , and get dataArray , dataArray(slice n + n+10), total page = items /10 , move page = move n
     // situation 3 = only others
-    // 20 items a page , page move page = move n when
+    // 20 items a page , page move page = move n when// finish!!
   };
 
   console.log(character);
-
-  console.log(showItem);
-
   return (
     <>
       <h1>Rick && Morty =)</h1>
