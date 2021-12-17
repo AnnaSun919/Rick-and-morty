@@ -148,7 +148,11 @@ function Character() {
     }
     if (species.value || species.value || name.value) {
       setSearchOther(true);
+    } else if ((!startDate.value, !endDate.value)) {
+      setDate(false);
     }
+
+    setfindNothing("");
     setAPIPage(1);
     setShowPage(1);
     setSeachItem({
@@ -196,9 +200,7 @@ function Character() {
     }
     pageHelper(elem);
   };
-
-  console.log(basic.totalCharacter);
-
+  console.log(date);
   return (
     <>
       <h1>Rick && Morty =)</h1>
@@ -228,6 +230,7 @@ function Character() {
         to
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
+        <button type="reset">Clear</button>
       </form>
 
       <span>{findNothing && <span>{findNothing}</span>}</span>
