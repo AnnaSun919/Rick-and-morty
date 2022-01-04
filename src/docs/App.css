@@ -1,13 +1,44 @@
+.box {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+img {
+  height: auto;
+  width: 15vw;
+}
+
 form {
-  margin: 5px;
   background-color: #4aa4f8;
   border-radius: 10px;
-  width: 95vw;
-  margin: 2vh 2.5vw;
+  width: 80vw;
+  margin: 10px 0;
 }
 
 form input {
   margin: 5px;
+}
+
+form button {
+  margin: 2px 10px;
+  background-color: #4aa4f8;
+  color: white;
+  border-radius: 5px;
+  padding: 3px 5px;
+  border: 1px white solid;
+}
+
+form button:hover {
+  background-color: #7bbdfa;
 }
 
 .character_container {
@@ -15,7 +46,6 @@ form input {
   display: grid;
   width: 80vw;
   height: 70vh;
-  margin-left: 10vw;
   -ms-grid-columns: (1fr)[5];
       grid-template-columns: repeat(5, 1fr);
   -ms-grid-rows: (1fr)[2];
@@ -45,7 +75,7 @@ form input {
   color: white;
   border-radius: 10%;
   border: 2px solid #9e97da;
-  padding: 5px 15px;
+  padding: 2px 10px;
 }
 
 .dropdown {
@@ -64,7 +94,8 @@ form input {
   background-color: white;
   border: 0.5px solid #858585;
   width: 100px;
-  height: 20vh;
+  height: auto;
+  max-height: 30vh;
   overflow-y: scroll;
   overflow-x: hidden;
   cursor: pointer;
@@ -74,13 +105,77 @@ form input {
   background-color: #e6e6e6;
 }
 
-.App {
-  text-align: center;
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
   width: 100%;
-  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 10;
 }
 
-h1 {
-  font-size: 1em;
+.box2 {
+  position: fixed;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  top: 10vh;
+  left: 20vw;
+  background: white;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  z-index: 100;
+  width: 60vw;
+  height: 70vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-radius: 10px;
+}
+
+.box2 button {
+  position: absolute;
+  font-weight: bold;
+  left: 10px;
+  margin-top: 10px;
+  background: none;
+  border: none;
+  height: 25px;
+  width: 25px;
+}
+
+.box2 .info_box {
+  width: 80%;
+  float: left;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.box2 .info_box img {
+  height: 300px;
+  width: 300px;
+}
+
+.box2 .info_box span {
+  margin: 0 10px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.App {
+  background-color: #d5eed5;
+  height: 100vh;
 }
 /*# sourceMappingURL=App.css.map */
