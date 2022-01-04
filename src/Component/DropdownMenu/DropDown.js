@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 
-function Dropdownmenu() {
+function Dropdownmenu(props) {
+  const pageNoArr = props.props;
+
   return (
     <>
       <div className="dropdown">
         <div className="menu">
-          <span>1</span>
-          <span>2</span>
-          <span>3</span>
+          {pageNoArr.map((elem) => (
+            <div
+              onClick={(e) => {
+                props.onShow(e, elem);
+              }}
+            >
+              {elem}
+            </div>
+          ))}
         </div>
       </div>
     </>

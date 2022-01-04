@@ -40,6 +40,40 @@ form input {
   width: 80%;
 }
 
+.nav-item button {
+  background-color: #796edb;
+  color: white;
+  border-radius: 10%;
+  border: 2px solid #9e97da;
+  padding: 5px 15px;
+}
+
+.dropdown {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.dropdown .menu {
+  display: fixed;
+  position: absolute;
+  border-radius: 5px;
+  background-color: white;
+  border: 0.5px solid #858585;
+  width: 100px;
+  height: 20vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+.dropdown .menu div:hover {
+  background-color: #e6e6e6;
+}
+
 .App {
   text-align: center;
   width: 100%;

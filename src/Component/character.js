@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Dropdown } from "react-bootstrap";
+
 import Dropdownmenu from "./DropdownMenu/DropDown";
 import DropdownItem from "./DropdownMenu/DropdownItem";
 import axios from "axios";
@@ -21,17 +21,15 @@ function Character() {
     character: "",
   });
 
-  const [showItem, setShowItem] = useState(null);
   let [APIpage, setAPIPage] = useState(1);
-  let [showPage, setShowPage] = useState(1);
   const [showDetail, setShowDetail] = useState(false);
   const [characterNo, setCharacterNo] = useState(null);
   let [serachItem, setSeachItem] = useState(null);
   const [pageNoArr, setPageNoArr] = useState([]);
   const [date, setDate] = useState(false);
   const [searchOther, setSearchOther] = useState(false);
-  const [first, setFirst] = useState(true);
   const [findNothing, setfindNothing] = useState(null);
+  let [n, setn] = useState(0);
 
   useEffect(() => {
     try {
@@ -79,8 +77,6 @@ function Character() {
             let test = [];
             console.log(totalPage);
             while (totalPage >= i) {
-              console.log("hello");
-
               let responseData = await axios.get(
                 `${API_URL}/character/?page=${i}`
               );
@@ -99,7 +95,6 @@ function Character() {
           }
         }
 
-        setShowItem(response.data.results.slice(0, 10));
         pageNo(response.data.info.count);
         setBasic({
           totalCharacter: response.data.info.count,
@@ -108,11 +103,10 @@ function Character() {
         });
 
         if (date) {
-          console.log("test" + dataArray);
           if (dataArray.length === 0) {
             setfindNothing("Find no informaion");
           }
-          setShowItem(dataArray.slice(0, 10));
+
           setBasic({
             totalCharacter: dataArray.length,
             character: dataArray,
@@ -139,7 +133,7 @@ function Character() {
     } catch (err) {
       console.log(err);
     }
-  }, [serachItem, APIpage, first, date, searchOther]);
+  }, [serachItem, APIpage, date, searchOther]);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -156,7 +150,7 @@ function Character() {
 
     setfindNothing("");
     setAPIPage(1);
-    setShowPage(1);
+
     setSeachItem({
       species: species.value,
       name: name.value,
@@ -179,54 +173,40 @@ function Character() {
 
   const pageHelper = (elem) => {
     if (date) {
-      setShowItem(basic.character.slice(elem * 10 - 10, elem * 10));
+      // setShowItem(basic.character.slice(elem * 10 - 10, elem * 10));
+      setn(elem * 10 - 10, elem * 10);
     } else {
       if (elem % 2 === 0) {
-        setTimeout(() => {
-          setBasic((currentState) => {
-            setShowItem(currentState.character.slice(10, 20));
-            return currentState;
-          });
-        }, 1000);
+        setn(10);
+
+        // setTimeout(() => {
+        //   setBasic((currentState) => {
+        //     setShowItem(currentState.character.slice(10, 20));
+        //     return currentState;
+        //   });
+        // }, 1000);
       } else {
-        setShowItem(basic.character.slice(0, 10));
+        setn(0);
       }
     }
   };
 
   const forShowItem = (e, elem) => {
     e.preventDefault();
-    setShowPage(elem);
     if (!date) {
       elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
     }
     pageHelper(elem);
   };
 
+  console.log(n);
+
   return (
     <>
       <h1>Rick && Morty =)</h1>
       <DropdownItem>
-        <Dropdownmenu />
+        <Dropdownmenu props={pageNoArr} onShow={forShowItem} />
       </DropdownItem>
-
-      <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {showPage} PAGE
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu
-          style={
-            ({ overflowY: "auto" }, { overflowX: "hidden" }, { height: "60vh" })
-          }
-        >
-          {pageNoArr.map((elem, index) => (
-            <Dropdown.Item key={index} onClick={(e) => forShowItem(e, elem)}>
-              {elem} PAGE
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
 
       <form onSubmit={handleSearch}>
         <label>Species</label>
@@ -246,8 +226,8 @@ function Character() {
 
       <span>{findNothing && <span>{findNothing}</span>}</span>
       <div className="character_container">
-        {showItem &&
-          showItem.map((element, index) => (
+        {basic.character &&
+          basic.character.slice(n, n + 10).map((element, index) => (
             <>
               <div
                 key={index}
