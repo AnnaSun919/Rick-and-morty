@@ -205,7 +205,7 @@ function Character() {
       }
     }
   };
-
+  //clear for info
   const handleClear = (event) => {
     event.preventDefault();
     Array.from(document.querySelectorAll("input")).forEach(
@@ -214,6 +214,7 @@ function Character() {
     setDate(false);
   };
 
+  //handle page selector opening
   const forOpen = () => {
     setOpen(!open);
   };
