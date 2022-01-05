@@ -5,7 +5,7 @@
   align-items: center;
   top: 10vh;
   left:20vw;
-background: white;
+  background-color: lighten($background-color, 8%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   z-index: 100;
 width: 60vw;

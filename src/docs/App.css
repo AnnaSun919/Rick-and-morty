@@ -129,7 +129,7 @@ form button:hover {
           align-items: center;
   top: 10vh;
   left: 20vw;
-  background: white;
+  background-color: #f2faf2;
   -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   z-index: 100;

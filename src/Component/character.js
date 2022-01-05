@@ -145,12 +145,13 @@ function Character() {
     getcharacter();
   }, [serachItem, APIpage, date, searchOther]);
 
+  //function for searching
   const handleSearch = (event) => {
     event.preventDefault();
     setfindNothing(null);
     setAPIPage(1);
     setPageNo(1);
-    forShowItem(event, 1);
+    forSetAPI(event, 1);
 
     const { species, name, status, startDate, endDate } = event.target;
     if ((startDate.value, endDate.value)) {
@@ -171,6 +172,7 @@ function Character() {
     });
   };
 
+  //function for handling singlecharacter info
   const hanldDetails = (e, number, show) => {
     e.preventDefault();
 
@@ -182,6 +184,15 @@ function Character() {
     }
   };
 
+  //function for page drop down menu to set APIpage
+  const forSetAPI = (e, elem) => {
+    e.preventDefault();
+    if (!date) {
+      elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
+    }
+    pageHelper(elem);
+  };
+  //function handling page selector
   const pageHelper = (elem) => {
     setPageNo(elem);
     if (date) {
@@ -193,14 +204,6 @@ function Character() {
         setn(0);
       }
     }
-  };
-
-  const forShowItem = (e, elem) => {
-    e.preventDefault();
-    if (!date) {
-      elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
-    }
-    pageHelper(elem);
   };
 
   const handleClear = (event) => {
@@ -219,7 +222,7 @@ function Character() {
     <div className="box">
       <img src={logo} alt="rick and morty" />
       <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
-        <Dropdownmenu props={pageNoArr} onShow={forShowItem} onOpen={forOpen} />
+        <Dropdownmenu props={pageNoArr} onShow={forSetAPI} onOpen={forOpen} />
       </DropdownItem>
       <form onSubmit={handleSearch}>
         <label>Species</label>
