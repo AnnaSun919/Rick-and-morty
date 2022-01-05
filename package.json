@@ -18,8 +18,11 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+<<<<<<< HEAD
     "predeploy": "npm run build",
     "deploy": "gh-pages -b main -d build",
+=======
+>>>>>>> parent of eae9323 (Updates)
     "publish": "gh-pages -d src",
     "start": "react-scripts start",
     "build": "react-scripts build",
