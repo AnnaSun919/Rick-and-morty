@@ -1,11 +1,9 @@
 import React from "react";
 
 function Search(props) {
-  const { onSearch, onClear } = props;
-
   return (
     <>
-      <form onSubmit={onSearch}>
+      <form onSubmit={() => props.onSearch()}>
         <label>Species</label>
         <input placeholder="Filter Species" name="species" />
         <label>Name</label>
@@ -18,7 +16,7 @@ function Search(props) {
         to
         <input placeholder="Filter Status" name="endDate" type="date" />
         <button type="submit">Submit</button>
-        <button type="button" onClick={onClear}>
+        <button type="button" onClick={() => props.onClear()}>
           Clear
         </button>
       </form>
