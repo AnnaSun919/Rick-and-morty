@@ -190,6 +190,7 @@ function Character() {
       }
     }
   };
+<<<<<<< HEAD
 
   const forShowItem = (e, elem) => {
     e.preventDefault();
@@ -197,6 +198,19 @@ function Character() {
       elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
     }
     pageHelper(elem);
+=======
+
+  const handleClear = (event) => {
+    event.preventDefault();
+    Array.from(document.querySelectorAll("input")).forEach(
+      (input) => (input.value = "")
+    );
+    setDate(false);
+  };
+
+  const forOpen = () => {
+    setOpen(!open);
+>>>>>>> parent of 0022322b (setting)
   };
 
   console.log(n);
