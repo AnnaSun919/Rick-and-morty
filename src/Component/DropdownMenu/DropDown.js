@@ -7,12 +7,10 @@ function Dropdownmenu(props) {
     <>
       <div className="dropdown">
         <div className="menu">
-          {pageNoArr.map((elem, index) => (
+          {pageNoArr.map((elem) => (
             <div
-              key={index}
               onClick={(e) => {
                 props.onShow(e, elem);
-                props.onOpen();
               }}
             >
               {elem}

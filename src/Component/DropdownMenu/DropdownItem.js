@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
 function DropdownItem(props) {
+  const [open, setOpen] = useState(false);
   return (
     <div className="nav-item">
-      <button type="button" onClick={() => props.onOpen()}>
-        Page {props.pageNo} ▾
+      <button type="button" onClick={() => setOpen(!open)}>
+        Page
       </button>
 
-      {props.open && props.children}
+      {open && props.children}
     </div>
   );
 }
