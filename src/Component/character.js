@@ -9,12 +9,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import SingleCharater from "./singleCharater";
 
 function Character() {
-  //jest
-  //find no itme no error
-  //too many useState
-  //page arr can it be easier ??
-  //for the episode info loop through or not ,
-  // responsive =)
   let [basic, setBasic] = useState({
     totalPage: "",
     totalCharacter: "",
@@ -190,7 +184,6 @@ function Character() {
       }
     }
   };
-<<<<<<< HEAD
 
   const forShowItem = (e, elem) => {
     e.preventDefault();
@@ -198,80 +191,80 @@ function Character() {
       elem % 2 === 0 ? setAPIPage(elem / 2) : setAPIPage(Math.ceil(elem / 2));
     }
     pageHelper(elem);
-=======
 
-  const handleClear = (event) => {
-    event.preventDefault();
-    Array.from(document.querySelectorAll("input")).forEach(
-      (input) => (input.value = "")
+    const handleClear = (event) => {
+      event.preventDefault();
+      Array.from(document.querySelectorAll("input")).forEach(
+        (input) => (input.value = "")
+      );
+      setDate(false);
+    };
+
+    const forOpen = () => {
+      setOpen(!open);
+    };
+
+    console.log(n);
+
+    return (
+      <>
+        <h1>Rick && Morty =)</h1>
+        <DropdownItem>
+          <Dropdownmenu props={pageNoArr} onShow={forShowItem} />
+        </DropdownItem>
+
+        <form onSubmit={handleSearch}>
+          <label>Species</label>
+          <input placeholder="Filter Species" name="species" />
+          <label>Name</label>
+          <input placeholder="Filter Name" name="name" />
+          <label>Status</label>
+          <input placeholder="Filter Status" name="status" />
+          <br />
+          <label>Created Date: From </label>
+          <input placeholder="Filter Status" name="startDate" type="date" />
+          to
+          <input placeholder="Filter Status" name="endDate" type="date" />
+          <button type="submit">Submit</button>
+          <button type="reset">Clear</button>
+        </form>
+
+        <span>{findNothing && <span>{findNothing}</span>}</span>
+        <div className="character_container">
+          {basic.character &&
+            basic.character.slice(n, n + 10).map((element, index) => (
+              <>
+                <div
+                  key={index}
+                  className="item"
+                  onClick={(e) => {
+                    hanldDetails(e, element.id, "open");
+                  }}
+                >
+                  <img src={element.image} alt="img" />
+                  <br />
+                  <span>{element.name}</span>
+                  <br />
+                  <span>{element.species}</span>
+                  <br />
+                  <span>{element.status}</span>
+                  <br />
+                  <span>{element.created.slice(0, 10)}</span>
+                  <br />
+                </div>
+              </>
+            ))}
+        </div>
+        {showDetail && <Backdrop />}
+        {showDetail && (
+          <SingleCharater
+            characterNo={characterNo}
+            onHandleDetails={hanldDetails}
+          />
+        )}
+      </>
     );
-    setDate(false);
   };
-
-  const forOpen = () => {
-    setOpen(!open);
->>>>>>> parent of 0022322b (setting)
-  };
-
-  console.log(n);
-
-  return (
-    <>
-      <h1>Rick && Morty =)</h1>
-      <DropdownItem>
-        <Dropdownmenu props={pageNoArr} onShow={forShowItem} />
-      </DropdownItem>
-
-      <form onSubmit={handleSearch}>
-        <label>Species</label>
-        <input placeholder="Filter Species" name="species" />
-        <label>Name</label>
-        <input placeholder="Filter Name" name="name" />
-        <label>Status</label>
-        <input placeholder="Filter Status" name="status" />
-        <br />
-        <label>Created Date: From </label>
-        <input placeholder="Filter Status" name="startDate" type="date" />
-        to
-        <input placeholder="Filter Status" name="endDate" type="date" />
-        <button type="submit">Submit</button>
-        <button type="reset">Clear</button>
-      </form>
-
-      <span>{findNothing && <span>{findNothing}</span>}</span>
-      <div className="character_container">
-        {basic.character &&
-          basic.character.slice(n, n + 10).map((element, index) => (
-            <>
-              <div
-                key={index}
-                className="item"
-                onClick={(e) => {
-                  hanldDetails(e, element.id, "open");
-                }}
-              >
-                <img src={element.image} alt="img" />
-                <br />
-                <span>{element.name}</span>
-                <br />
-                <span>{element.species}</span>
-                <br />
-                <span>{element.status}</span>
-                <br />
-                <span>{element.created.slice(0, 10)}</span>
-                <br />
-              </div>
-            </>
-          ))}
-      </div>
-      {showDetail && <Backdrop />}
-      {showDetail && (
-        <SingleCharater
-          characterNo={characterNo}
-          onHandleDetails={hanldDetails}
-        />
-      )}
-    </>
-  );
 }
+
 export default Character;
