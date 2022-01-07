@@ -6,6 +6,7 @@ import Backdrop from "../Backdrop/Backdrop";
 import { API_URL } from "../../config";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SingleCharater from "./singleCharacter";
+import Search from "./Search";
 import logo from "../../img/Rick_and_Morty_logo.png";
 
 function Character() {
@@ -222,6 +223,7 @@ function Character() {
       <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
         <Dropdownmenu props={pageNoArr} onShow={forSetAPI} onOpen={forOpen} />
       </DropdownItem>
+      <Search onSearch={handleSearch} onClear={handleClear} />
       <form onSubmit={handleSearch}>
         <label>Species</label>
         <input placeholder="Filter Species" name="species" />
