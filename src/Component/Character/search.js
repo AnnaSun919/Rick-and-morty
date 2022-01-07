@@ -4,7 +4,7 @@ function Search(props) {
   return (
     <>
       <form onSubmit={() => props.onSearch()}>
-        <label>Species</label>
+        <label>Species a</label>
         <input placeholder="Filter Species" name="species" />
         <label>Name</label>
         <input placeholder="Filter Name" name="name" />
