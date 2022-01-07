@@ -1,20 +1,15 @@
 @import "config";
 @import "character";
 @import "dropdownitem";
-
+@import "backdrop";
+@import "singlecharacter";
 
 
 .App {
-  text-align: center;
-width: 100%;
-height: 100%;
-// background-color: blue;
+  background-color: rgb(213, 238, 213);
+  height: 100vh;
 }
 
-h1{
-  font-size: $subtile-font-size;
-
-}
 
 
 
