@@ -224,7 +224,7 @@ function Character() {
         <Dropdownmenu props={pageNoArr} onShow={forSetAPI} onOpen={forOpen} />
       </DropdownItem>
       <Search onSearch={handleSearch} onClear={handleClear} />
-      <form onSubmit={handleSearch}>
+      {/* <form onSubmit={handleSearch}>
         <label>Species</label>
         <input placeholder="Filter Species" name="species" />
         <label>Name</label>
@@ -240,7 +240,7 @@ function Character() {
         <button type="button" onClick={handleClear}>
           Clear
         </button>
-      </form>
+      </form> */}
       <span>{findNothing && <span>{findNothing}</span>}</span>
       {!findNothing && (
         <div className="character_container">
