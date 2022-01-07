@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Dropdownmenu from "./DropdownMenu/DropDown";
-import DropdownItem from "./DropdownMenu/DropdownItem";
+import Dropdownmenu from "../DropdownMenu/DropDown";
+import DropdownItem from "../DropdownMenu/DropdownItem";
 import axios from "axios";
-import Backdrop from "./Backdrop/Backdrop";
-import { API_URL } from "../config";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Backdrop from "../Backdrop/Backdrop";
+import { API_URL } from "../../config";
+import Search from "./search";
 import SingleCharater from "./singleCharater";
-import logo from "../img/Rick_and_Morty_logo.png";
+import logo from "../../img/Rick_and_Morty_logo.png";
 
 function Character() {
-  //jest
-  //too many useState
-
   //all characters render info
   let [basic, setBasic] = useState({
     totalPage: "",
@@ -221,23 +218,7 @@ function Character() {
       <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
         <Dropdownmenu props={pageNoArr} onShow={forShowItem} onOpen={forOpen} />
       </DropdownItem>
-      <form onSubmit={handleSearch}>
-        <label>Species</label>
-        <input placeholder="Filter Species" name="species" />
-        <label>Name</label>
-        <input placeholder="Filter Name" name="name" />
-        <label>Status</label>
-        <input placeholder="Filter Status" name="status" />
-        <br />
-        <label>Created Date: From </label>
-        <input placeholder="Filter Status" name="startDate" type="date" />
-        to
-        <input placeholder="Filter Status" name="endDate" type="date" />
-        <button type="submit">Submit</button>
-        <button type="button" onClick={handleClear}>
-          Clear
-        </button>
-      </form>
+      <Search handleSearch={handleSearch} handleClear={handleClear} />
       <span>{findNothing && <span>{findNothing}</span>}</span>
       {!findNothing && (
         <div className="character_container">
@@ -272,7 +253,7 @@ function Character() {
           characterNo={characterNo}
           onHandleDetails={hanldDetails}
         />
-      )}{" "}
+      )}
     </div>
   );
 }
