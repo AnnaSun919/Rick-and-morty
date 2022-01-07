@@ -1,5 +1,9 @@
 ### Rick and Morty
 
+## Deployment Link
+
+https://annasun919.github.io/Rick-and-morty
+
 ## MVP
 
 As a Rick and Morty follower I want to:
