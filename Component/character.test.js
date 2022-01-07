@@ -1,11 +1,8 @@
 import React from "react";
 import ReactDom from "react-dom";
-
-import App from "./App";
+import Character from "./character";
 
 it("renders without crashing", () => {
   const div = document.createElement("div");
-
-  ReactDom.render(<App />, div);
-  ReactDom.unmountComponentAtNode(div);
+  ReactDom.render(<Character></Character>, div);
 });
