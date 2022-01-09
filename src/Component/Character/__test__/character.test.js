@@ -5,6 +5,7 @@ import Search from "../Search";
 import SingleCharater from "../singleCharater";
 import DropItem from "../../DropdownMenu/DropdownItem";
 import Character from "../character";
+import Backdrop from "../../Backdrop/Backdrop";
 
 configure({ adapter: new Adapter() });
 
@@ -18,6 +19,7 @@ it("Components without crashing", () => {
   shallow(<SingleCharater />);
   shallow(<Search />);
   shallow(<DropItem />);
+  shallow(<Backdrop />);
 });
 
 // it("renders Account header", () => {
@@ -25,3 +27,9 @@ it("Components without crashing", () => {
 //   const header = <img />;
 //   expect(wrapper.contains(header)).toEqual(true);
 // });
+
+describe("<Character />", () => {
+  it("renders an `.item`", () => {
+    const wrapper = shallow(<Character />);
+  });
+});

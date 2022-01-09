@@ -1,150 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dropdownmenu from "../DropdownMenu/DropDown";
 import DropdownItem from "../DropdownMenu/DropdownItem";
-import axios from "axios";
 import Backdrop from "../Backdrop/Backdrop";
-import { API_URL } from "../../config";
 import Search from "./search";
 import SingleCharater from "./singleCharater";
 import logo from "../../img/Rick_and_Morty_logo.png";
+import useFetch from "./useFetch";
 
 function Character() {
-  //all characters render info
-  let [basic, setBasic] = useState({
-    totalPage: "",
-    totalCharacter: "",
-    character: "",
-  });
-
   //setting page , for url
   let [APIpage, setAPIPage] = useState(1);
   const [characterNo, setCharacterNo] = useState(null);
 
-  const [pageNoArr, setPageNoArr] = useState([]);
   const [date, setDate] = useState(false);
-
   let [serachItem, setSeachItem] = useState(null);
   const [searchOther, setSearchOther] = useState(false);
-  const [findNothing, setfindNothing] = useState(null);
 
   //for showing single character info
   const [showDetail, setShowDetail] = useState(false);
-
   let [n, setn] = useState(0);
-
   const [open, setOpen] = useState(false);
   const [pageNo, setPageNo] = useState(1);
 
-  useEffect(() => {
-    async function getcharacter() {
-      let dataArray = [];
-
-      let response = await axios.get(`${API_URL}/character/?page=${APIpage}`);
-
-      if (serachItem) {
-        if (searchOther) {
-          let searchValue = serachItem["species"];
-          let searchValue1 = serachItem["status"];
-          let searchValue2 = serachItem["name"];
-          try {
-            response = await axios.get(
-              `${API_URL}/character/?page=${APIpage}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
-            );
-          } catch (err) {
-            setfindNothing("No Character found");
-          }
-
-          if (date) {
-            let test = [];
-            let page = 1;
-            let totalPage = response.data.info.pages;
-            while (page <= totalPage) {
-              response = await axios.get(
-                `${API_URL}/character/?page=${page}&status=${searchValue1}&species=${searchValue}&name=${searchValue2}`
-              );
-              page++;
-
-              test.push(
-                response.data.results.filter((elem) => {
-                  return (
-                    serachItem["startDate"] <= elem.created &&
-                    elem.created <= serachItem["endDate"]
-                  );
-                })
-              );
-            }
-
-            dataArray = test.flat();
-          }
-        } else if (date) {
-          let response = await axios.get(
-            `${API_URL}/character/?page=${APIpage}`
-          );
-
-          let totalPage = response.data.info.pages;
-          let i = 1;
-          let test = [];
-
-          while (totalPage >= i) {
-            let responseData = await axios.get(
-              `${API_URL}/character/?page=${i}`
-            );
-            i++;
-
-            test.push(
-              responseData.data.results.filter((elem) => {
-                return (
-                  serachItem["startDate"] <= elem.created &&
-                  elem.created <= serachItem["endDate"]
-                );
-              })
-            );
-          }
-          dataArray = test.flat();
-        }
-      }
-
-      pageNo(response.data.info.count);
-      setBasic({
-        totalCharacter: response.data.info.count,
-        character: response.data.results,
-        totalPage: response.data.info.pages,
-      });
-
-      if (date) {
-        if (dataArray.length === 0) {
-          setfindNothing("Find no informaion");
-        }
-
-        setBasic({
-          totalCharacter: dataArray.length,
-          character: dataArray,
-        });
-
-        pageNo(dataArray.length);
-      }
-    }
-
-    const pageNo = (totalCharacter) => {
-      let totalPage = 0;
-      totalCharacter % 10 === 0
-        ? (totalPage = totalCharacter / 10)
-        : (totalPage = totalCharacter / 10 + 1);
-
-      const pageArr = [];
-      for (let i = 1; i <= totalPage; i++) {
-        pageArr.push(i);
-      }
-
-      setPageNoArr(pageArr);
-    };
-
-    getcharacter();
-  }, [serachItem, APIpage, date, searchOther]);
+  const { basic, pageNoArr, findNothing } = useFetch(
+    serachItem,
+    searchOther,
+    date,
+    APIpage
+  );
 
   const handleSearch = (event) => {
     event.preventDefault();
-    setfindNothing(null);
     setAPIPage(1);
     setPageNo(1);
     forShowItem(event, 1);

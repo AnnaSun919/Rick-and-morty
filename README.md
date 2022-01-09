@@ -16,7 +16,7 @@ As a Rick and Morty follower I want to:
 
 ## Goal
 
-- learn handle pagination 
+- learn handling pagination
 - learn jest + react testing libraray
 
 ## API
@@ -25,7 +25,8 @@ by using API (https://rickandmortyapi.com/api/)
 
 ## Built with
 
-- React
+- React.js
+- React Hooks
 - Jest + React testing libraraies
 - SASS
 - Axios
