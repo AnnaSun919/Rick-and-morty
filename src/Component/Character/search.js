@@ -1,6 +1,31 @@
 import React from "react";
 
 function Search(props) {
+  // const handleSearch = (event) => {
+  //   event.preventDefault();
+  //   setAPIPage(1);
+  //   setPageNo(1);
+  //   forShowItem(event, 1);
+
+  //   const { species, name, status, startDate, endDate } = event.target;
+  //   if ((startDate.value, endDate.value)) {
+  //     setDate(true);
+  //   }
+  //   if (species.value || species.value || name.value) {
+  //     setSearchOther(true);
+  //   } else if ((!startDate.value, !endDate.value)) {
+  //     setDate(false);
+  //   }
+
+  //   setSeachItem({
+  //     species: species.value,
+  //     name: name.value,
+  //     status: status.value,
+  //     startDate: startDate.value,
+  //     endDate: endDate.value,
+  //   });
+  // };
+
   return (
     <div>
       <form onSubmit={props.handleSearch}>

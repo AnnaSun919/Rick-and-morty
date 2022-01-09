@@ -98,12 +98,20 @@ function Character() {
     setOpen(!open);
   };
 
+  console.log(pageNoArr);
+
   return (
     <div className="box">
       <img src={logo} alt="rick and morty" />
-      <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
-        <Dropdownmenu props={pageNoArr} onShow={forShowItem} onOpen={forOpen} />
-      </DropdownItem>
+      {!findNothing && (
+        <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
+          <Dropdownmenu
+            props={pageNoArr}
+            onShow={forShowItem}
+            onOpen={forOpen}
+          />
+        </DropdownItem>
+      )}
       <Search handleSearch={handleSearch} handleClear={handleClear} />
       <span>{findNothing && <span>{findNothing}</span>}</span>
       {!findNothing && (
