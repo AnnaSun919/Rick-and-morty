@@ -21,10 +21,36 @@ img {
   min-width: 200px;
 }
 
+.form_control {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
 form {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   background-color: #4aa4f8;
   border-radius: 10px;
   width: 80vw;
+  min-width: 250px;
   margin: 10px 0;
 }
 
@@ -52,8 +78,6 @@ form button:hover {
   height: auto;
   -ms-grid-columns: (1fr)[1];
       grid-template-columns: repeat(1, 1fr);
-  -ms-grid-rows: (1fr)[10];
-      grid-template-rows: repeat(10, 1fr);
   grid-gap: 1rem;
 }
 
@@ -164,7 +188,6 @@ form button:hover {
 .box2 .info_box img {
   height: auto;
   max-height: 40vh;
-  min-width: 200px;
   width: 20vw;
 }
 
@@ -179,8 +202,6 @@ form button:hover {
     height: auto;
     -ms-grid-columns: (1fr)[2];
         grid-template-columns: repeat(2, 1fr);
-    -ms-grid-rows: (1fr)[5];
-        grid-template-rows: repeat(5, 1fr);
   }
   .info_box {
     display: -webkit-box;
@@ -198,8 +219,6 @@ form button:hover {
     height: 70vh;
     -ms-grid-columns: (1fr)[5];
         grid-template-columns: repeat(5, 1fr);
-    -ms-grid-rows: (1fr)[2];
-        grid-template-rows: repeat(2, 1fr);
   }
 }
 

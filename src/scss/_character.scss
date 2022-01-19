@@ -15,11 +15,21 @@ img{
 .titleImg{
   min-width: 200px;
 }
-form{
 
+.form_control{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+form{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   background-color: $secondary-color;
   border-radius: 10px;
   width: 80vw;
+  min-width: 250px;
   margin: 10px 0;
 
   
@@ -50,7 +60,7 @@ form{
 
 
   grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  // grid-template-rows: repeat(10, 1fr);
   grid-gap: 1rem;
 
 
