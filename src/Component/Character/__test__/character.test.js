@@ -6,6 +6,7 @@ import SingleCharater from "../singleCharater";
 import DropItem from "../../DropdownMenu/DropdownItem";
 import Character from "../character";
 import Backdrop from "../../Backdrop/Backdrop";
+import useFetch from "../useFetch";
 
 configure({ adapter: new Adapter() });
 
@@ -13,6 +14,18 @@ const character = require("../character");
 
 test("chracter exist", () => {
   expect(character).toBeDefined();
+});
+
+const searchItem = {
+  species: "human",
+  name: "",
+  status: "",
+  startDate: "",
+  endDate: "",
+};
+
+test("useFetch exist", () => {
+  expect(useFetch).toBeDefined();
 });
 
 it("Components without crashing", () => {

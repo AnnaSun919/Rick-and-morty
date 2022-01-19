@@ -9,6 +9,7 @@ background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   z-index: 100;
 width: 60vw;
+min-width: 300px;
 height: 70vh;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -32,19 +33,22 @@ width: 25px;
   .info_box{
     width: 80%;
 
+
     float: left;
 
     img{
-      height: 300px;
-      width: 300px;
+      height: auto;
+      max-height: 40vh;
+      min-width: 200px;
+      width: 20vw;
     }
     span{
       margin:0 10px;
       text-align: left;
       font-weight: bold;
     }
-    display: flex;
-    flex-direction: row;
+    // display: flex;
+    // flex-direction: column;
   }
 
 

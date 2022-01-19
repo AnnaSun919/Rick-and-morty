@@ -102,7 +102,7 @@ function Character() {
 
   return (
     <div className="box">
-      <img src={logo} alt="rick and morty" />
+      <img className="titleImg" src={logo} alt="rick and morty" />
       {!findNothing && (
         <DropdownItem onOpen={forOpen} open={open} pageNo={pageNo}>
           <Dropdownmenu

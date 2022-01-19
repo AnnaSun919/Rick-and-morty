@@ -3,3 +3,21 @@ $secondary-color: rgb(74, 164, 248);
 $subtile-font-size: 1em;
 $big-screen-subtitle-font-size:1rem;
 
+
+@mixin media-md {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+@mixin media-lg {
+  @media screen and (min-width: 1024px) {
+    @content;
+  }
+}
+@mixin media-xl {
+  @media screen and (min-width: 1600px) {
+    @content;
+  }
+}
+
+

@@ -8,7 +8,12 @@ text-align: center;
 }
 img{
   height: auto;
-  width: 15vw;
+  width: 20vw;
+
+}
+
+.titleImg{
+  min-width: 200px;
 }
 form{
 
@@ -41,10 +46,11 @@ form{
 .character_container{
   display: grid;
   width: 80vw;
-  height: 70vh;
+  height: auto;
 
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: repeat(10, 1fr);
   grid-gap: 1rem;
 
 
