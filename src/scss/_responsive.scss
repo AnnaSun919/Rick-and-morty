@@ -1,14 +1,14 @@
 @include media-md {
   .character_container{
+  
 
-    height: auto;
-     grid-template-columns: repeat(2, 1fr);
-    // grid-template-rows: repeat(5, 1fr);
+     grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
 
   }
 
   .info_box{
-    // background-color: black;
+   
     display: flex;
     flex-direction: row;
   }
@@ -20,8 +20,7 @@
 @include media-lg {
   .character_container{
     height: 70vh;
-    grid-template-columns: repeat(5, 1fr);
-    // grid-template-rows: repeat(2, 1fr);
+
 
   }
   

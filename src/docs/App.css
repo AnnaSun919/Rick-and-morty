@@ -187,7 +187,6 @@ form button:hover {
 .box2 .info_box img {
   height: auto;
   max-height: 40vh;
-  min-width: 200px;
   width: 20vw;
 }
 
@@ -199,9 +198,10 @@ form button:hover {
 
 @media screen and (min-width: 768px) {
   .character_container {
-    height: auto;
-    -ms-grid-columns: (1fr)[2];
-        grid-template-columns: repeat(2, 1fr);
+    -ms-grid-columns: (1fr)[5];
+        grid-template-columns: repeat(5, 1fr);
+    -ms-grid-rows: (1fr)[2];
+        grid-template-rows: repeat(2, 1fr);
   }
   .info_box {
     display: -webkit-box;
@@ -217,8 +217,6 @@ form button:hover {
 @media screen and (min-width: 1024px) {
   .character_container {
     height: 70vh;
-    -ms-grid-columns: (1fr)[5];
-        grid-template-columns: repeat(5, 1fr);
   }
 }
 
